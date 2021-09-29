@@ -6,12 +6,12 @@ using namespace std;
 
 int findEpsilon()
 {
-    float one = 1.;
+    double one = 1.;
     int i = 1;
-    float var = pow(2., (-1) * i);
+    double var = pow(2., (-1) * i);
 
     while (one + var != 1.) {
-        var = float(pow(2., (-1) * i));
+        var = double(pow(2., (-1) * i));
         i++;
         // cout << var << endl;
     }
@@ -27,13 +27,13 @@ int findMaximum() {
     while (!isinf(max)) {
         max = max + pow(2, n);
         n++;
-        cout << max << endl;
+        // cout << max << endl;
     }
     return n;
 }
 
 int main() {
-    // findEpsilon();
-    cout << findMaximum() << endl;
+    findEpsilon();
+    // cout << findMaximum() << endl;
     return 0;
 }
