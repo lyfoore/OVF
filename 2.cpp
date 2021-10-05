@@ -1,9 +1,12 @@
 #include <iostream>
+#define _USE_MATH_DEFINES
 #include <cmath>
 
 #define A 1
 #define U0 1
-#define epsilon 2e-16
+#define epsilon 2e-15
+#define ALPHA 1 // A*sqrt(U0)
+#define E1 1 - M_PI *M_PI / (ALPHA * ALPHA)
 
 using namespace std;
 
@@ -13,7 +16,7 @@ int n3 = 0;
 
 double f(double ksi)
 {
-    return tan(A * sqrt(2 * U0 * (1 - ksi))) * sqrt(1 / ksi - 1) - 1;
+    return tan(ALPHA * sqrt(2 * (1 - ksi))) * sqrt(1 / ksi - 1) - 1;
 }
 
 double df(double ksi)
@@ -46,7 +49,7 @@ double dichotomy(double a, double b)
 
 double simpleItterations(double x)
 {
-    double lambda = -0.01;
+    double lambda = -0.25;
     double x_next = x;
 
     do
@@ -78,18 +81,16 @@ double newton(double x)
 int main()
 {
 
-    cout << "result (dichotomy) = " << dichotomy(0, 1) << endl;
+    cout << "result (dichotomy) = " << dichotomy(E1, 1) << endl;
     cout << "n (dichotomy) = " << n1 << "\n"
          << endl;
 
-    cout << "result (simpleItter) = " << simpleItterations(0.5) << "\n"
-         << endl;
-    cout << "n (dichotomy) = " << n2 << "\n"
+    cout << "result (simpleItter) = " << simpleItterations(0.5) << endl;
+    cout << "n (simpleItter) = " << n2 << "\n"
          << endl;
 
-    cout << "result (Newton) = " << newton(0.5) << "\n"
-         << endl;
-    cout << "n (dichotomy) = " << n3 << "\n"
+    cout << "result (Newton) = " << newton(0.5) << endl;
+    cout << "n (Newton) = " << n3 << "\n"
          << endl;
 
     return 0;

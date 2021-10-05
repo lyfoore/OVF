@@ -2,7 +2,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 
-const int INTERV = 1<<1;
+const int INTERV = 1 << 1;
 
 using namespace std;
 
@@ -48,9 +48,14 @@ double simpson(const int which, const int intervals, const double left, const do
     return temp;
 }
 
-int main() {
-    cout << "Exact value | Trapezoidal | Simpson\n" << endl;
-    cout << "first func:\n" << M_PI_2 << "   " << trapezoidal(1, INTERV, -1, 1) << "   " << simpson(1, INTERV, -1, 1) << endl;
-    cout << "second func:\n" << "1.29587" << "   " << trapezoidal(2, INTERV, 0, 1) << "   " << simpson(2, INTERV, 0, 1) << endl;
+int main()
+{
+    cout << "Exact value | Trapezoidal | Simpson\n"
+         << endl;
+    cout << "first func:\n"
+         << M_PI_2 << "   " << trapezoidal(1, INTERV, -1, 1) << "   " << simpson(1, INTERV, -1, 1) << endl;
+    cout << "second func:\n"
+         << "1.29587"
+         << "   " << trapezoidal(2, INTERV, 0, 1) << "   " << simpson(2, INTERV, 0, 1) << endl;
     return 0;
 }
