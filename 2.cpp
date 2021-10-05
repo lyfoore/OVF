@@ -7,49 +7,90 @@
 
 using namespace std;
 
-int n = 0;
+int n1 = 0;
+int n2 = 0;
+int n3 = 0;
 
-double f(double ksi) {
-    return tan(A*sqrt(2*U0*(1 - ksi)))*sqrt(1/ksi - 1) - 1;
+double f(double ksi)
+{
+    return tan(A * sqrt(2 * U0 * (1 - ksi))) * sqrt(1 / ksi - 1) - 1;
 }
 
-double dichotomy(double a, double b) {
-    if (abs(b - a) > epsilon) {
-        if (f(a) * f((a + b) / 2) <= 0) {
+double df(double ksi)
+{
+    return -(A * U0 * sqrt(1 / ksi - 1)) / (sqrt(2 * U0 * (1 - ksi)) * pow(cos(A * sqrt(2 * U0 * (1 - ksi))), 2)) - tan(A * sqrt(2 * U0 * (1 - ksi))) / (2 * ksi * ksi * sqrt(1 / ksi - 1));
+}
+
+double dichotomy(double a, double b)
+{
+    if (abs(b - a) > epsilon)
+    {
+        if (f(a) * f((a + b) / 2) <= 0)
+        {
             b = (a + b) / 2;
         }
-        else {
+        else
+        {
             a = (a + b) / 2;
         }
         // cout << a << " " << b << endl;
-        n++;
+        n1++;
         dichotomy(a, b);
     }
-    else {
+    else
+    {
         // cout << "a = " << a << endl;
-        return a;
+        return (a + b) / 2;
     }
 }
 
-double simpleItterations (double x_0) {
-    double x;
-    double x_next;
-    while (abs(x - x_next) > epsilon) {
+double simpleItterations(double x)
+{
+    double lambda = -0.01;
+    double x_next = x;
+
+    do
+    {
         x = x_next;
-        x_next = f(x_0) + x_0;
-        x_0 = x_next;
-        cout << x_next << endl;
-    }
-    return x_next;
+        x_next = x - lambda * f(x);
+        n2++;
+    } while (abs(x_next - x) > epsilon);
+
+    return (x_next + x) / 2;
 }
 
-int main() {
-    // double result = dichotomy(0, 1);
+double newton(double x)
+{
+    double lambda;
+    double x_next = x;
 
-    // cout << "result (dichotomy) = " << dichotomy(0, 1) << endl;
-    // cout << "n = "<< n << endl;
+    do
+    {
+        x = x_next;
+        lambda = 1 / df(x);
+        x_next = x - lambda * f(x);
+        n3++;
+    } while (abs(x_next - x) > epsilon);
 
-    cout << simpleItterations(0.5);
-    
+    return (x_next + x) / 2;
+}
+
+int main()
+{
+
+    cout << "result (dichotomy) = " << dichotomy(0, 1) << endl;
+    cout << "n (dichotomy) = " << n1 << "\n"
+         << endl;
+
+    cout << "result (simpleItter) = " << simpleItterations(0.5) << "\n"
+         << endl;
+    cout << "n (dichotomy) = " << n2 << "\n"
+         << endl;
+
+    cout << "result (Newton) = " << newton(0.5) << "\n"
+         << endl;
+    cout << "n (dichotomy) = " << n3 << "\n"
+         << endl;
+
     return 0;
 }

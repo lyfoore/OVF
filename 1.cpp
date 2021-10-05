@@ -10,7 +10,8 @@ int findEpsilon()
     int i = 1;
     double var = pow(2., (-1) * i);
 
-    while (one + var != 1.) {
+    while (one + var != 1.)
+    {
         var = double(pow(2., (-1) * i));
         i++;
         // cout << var << endl;
@@ -21,10 +22,12 @@ int findEpsilon()
     return 0;
 }
 
-int findMaximum() {
+int findMaximum()
+{
     double max = 0;
     int n = 0;
-    while (!isinf(max)) {
+    while (!isinf(max))
+    {
         max = max + pow(2, n);
         n++;
         // cout << max << endl;
@@ -32,7 +35,8 @@ int findMaximum() {
     return n;
 }
 
-int main() {
+int main()
+{
     findEpsilon();
     // cout << findMaximum() << endl;
     return 0;
