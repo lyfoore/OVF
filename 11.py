@@ -45,12 +45,13 @@ def progonka(a, b, c, d, n):
 
 def obrIterr(Y0, A, B, C, n, N, m):
     psi = []
+    toler = 1e-1000
     E = []
     for j in range(0, m):
         Y = Y0.copy()
         for k in range(0, j):
             Y = Y - psi[k]*(np.inner(Y0, psi[k]))/np.linalg.norm(psi[k])
-        for i in range(0, N):  
+        for i in range(0, N): 
             new_Y = Y
             prev_Y = new_Y.copy()
             a1 = A.copy()
@@ -59,6 +60,13 @@ def obrIterr(Y0, A, B, C, n, N, m):
             Y = progonka(a1, b1, c1, prev_Y, n)
             for k in range(0, j):
                 Y = Y - psi[k]*(np.inner(Y, psi[k]))/np.linalg.norm(psi[k])
+            # print(np.linalg.norm(prev_Y)/np.linalg.norm(Y))
+            # print(np.linalg.norm(prev_Y))
+            # print(np.linalg.norm(Y))
+            if abs(np.linalg.norm(prev_Y) - np.linalg.norm(Y) < toler):
+                print('break')
+                print(i)
+                break
         E0 = np.linalg.norm(new_Y)/np.linalg.norm(Y)  
         Y /= np.linalg.norm(Y)
         E.append(E0)
