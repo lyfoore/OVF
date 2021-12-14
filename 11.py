@@ -45,7 +45,7 @@ def progonka(a, b, c, d, n):
 
 def obrIterr(Y0, A, B, C, n, N, m):
     psi = []
-    toler = 1e-1000
+    toler = 1e-1
     E = []
     for j in range(0, m):
         Y = Y0.copy()

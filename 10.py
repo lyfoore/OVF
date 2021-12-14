@@ -10,7 +10,7 @@ def right_border(t):
 def start_T(x, L):
     return x*(1 - x/L)**2
 
-def progonka(A,B,C,F): #b - главная, c - верхняя, a - нижняя, длина одинаковая но c[-1] и a[0] не используются
+def progonka(A,B,C,F): 
     l = len(A)
     for i in range(1, l):
         k = -A[i]/B[i-1]
@@ -38,14 +38,6 @@ def par(prev_y, t, h, dt, Amp):
     
     return [A,B,C,F]
 
-def derivative(x, y):
-    l = len(y)-1
-    diff_y = np.zeros(l)
-    new_x = np.zeros(l)
-    for i in range(l):
-        diff_y[i] = (y[i+1]-y[i])/(x[i+1]-x[i])
-        new_x[i] = (x[i+1]+x[i])/2
-    return [new_x, diff_y]
 
 xmin = 0
 xmax = 1
@@ -76,17 +68,14 @@ plt.plot(X, Y)
 plt.xlabel('X')
 plt.ylabel("T")
 plt.show()
-print (Y[0], Y[-1])
-
-X1, Y1 = derivative(X, Y)
-plt.plot(X1, Y1)
-plt.xlabel('X')
-plt.ylabel("T'")
-plt.show()
     
-plt.plot(np.log(arr_t[1:-1]), np.log(arr_Tmax[1:-1]))
-plt.xlabel('ln(t)')
-plt.ylabel("ln(Tmax)")
+analyt_Tmax = np.linspace(0,T,nT)
+analyt_Tmax = 4 / (np.pi ** 3 ) * np.exp(-np.pi**2 * analyt_Tmax)
+
+plt.plot((arr_t[1:-1]), (analyt_Tmax[1:-1]))
+plt.plot((arr_t[1:-1]), (arr_Tmax[1:-1]))
+plt.xlabel('t')
+plt.ylabel("Tmax")
 plt.show()
 
 

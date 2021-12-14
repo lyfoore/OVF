@@ -18,7 +18,7 @@ def solver_Runge2(t0,x0,y0,tend,n):
         y[i] = y[i-1] + h/4*(f(t[i-1],x[i-1],y[i-1])[1] + 3*f(t[i-1]+2/3*h, x[i-1]+2/3*h*f(t[i-1],x[i-1],y[i-1])[0], y[i-1]+2/3*h*f(t[i-1],x[i-1],y[i-1])[1])[1])
     return [t,x,y]
 
-t,x,y = solver_Runge2(0,6,6,5,500)
+t,x,y = solver_Runge2(0,5,5.1,5.1,1500)
 plt.plot(x, y, label = 'Phase curve')
 plt.legend()
 plt.show()

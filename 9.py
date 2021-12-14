@@ -44,21 +44,13 @@ def detpar(xmin,xmax,a1,b1,c1,a2,b2,c2,n):
     F[-1] += -c2*C[-1]*h/(a2*h+b2)
     return [A,B,C,X,F]
 
-def derivative(x, y):
-    l = len(y)-1
-    diff_y = np.zeros(l)
-    new_x = np.zeros(l)
-    for i in range(l):
-        diff_y[i] = (y[i+1]-y[i])/(x[i+1]-x[i])
-        new_x[i] = (x[i+1]+x[i])/2
-    return [new_x, diff_y]
 
 
 xmin = 0
 xmax = np.pi
 n = 1001
-a1, b1, c1 = [1, 0, -2]
-a2, b2, c2 = [1, 1, -1]
+a1, b1, c1 = [0, 1, 0]
+a2, b2, c2 = [1, 1, 1]
 
 a,b,c,x,f = detpar(xmin,xmax,a1,b1,c1,a2,b2,c2,n)
 y = progonka(a,b,c,f)
@@ -69,19 +61,3 @@ plt.xlabel('x')
 plt.ylabel('y')
 plt.legend()
 plt.show()
-
-x1, y1 = derivative(x, y)
-plt.plot(x1, y1, label = 'Progonka')
-plt.xlabel('x')
-plt.ylabel("y'")
-plt.legend()
-plt.show()
-
-x2, y2 = derivative(x1, y1)
-y2 += - func(x2)
-plt.plot(x2, y2, label = 'Abs_error')
-plt.xlabel('x')
-plt.ylabel("y'-sin_x")
-plt.legend()
-plt.show()
-

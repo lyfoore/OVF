@@ -23,14 +23,14 @@ double besselJ(int m, double x)
 
 int main(int argc, const char *argv[])
 {
-    int i, n = 100;
+    int i, n = 10000;
     double dx = 2 * M_PI / n;
-    double delta_x = 1e-5;
+    // double delta_x = 1e-5;
     double J0_der;
 
     for (i = 0; i < n; i++)
     {
-        J0_der = (besselJ(0, i * dx + delta_x) - besselJ(0, i * dx - delta_x)) / (2 * delta_x);
+        J0_der = (besselJ(0, i * dx + dx/2) - besselJ(0, i * dx - dx/2)) / (dx);
         cout << fabs(J0_der + besselJ(1, i * dx)) << "\n";
     }
 

@@ -1,8 +1,9 @@
 #include <iostream>
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <fstream>
 
-const int INTERV = 1 << 1;
+const int INTERV = 1 << 2;
 
 using namespace std;
 
@@ -50,6 +51,18 @@ double simpson(const int which, const int intervals, const double left, const do
 
 int main()
 {
+    ofstream outf("output_3_2.txt");
+    for (int interv = 4; interv < 1 << 10; interv = interv << 1) {
+        outf << interv << "\t" << trapezoidal(2, interv, 0, 1) << endl;
+    }
+
+    outf << endl;
+
+    for (int interv = 4; interv < 1 << 10; interv = interv << 1) {
+        outf << interv << "\t" << simpson(2, interv, 0, 1) << endl;
+    }
+
+
     cout << "Exact value | Trapezoidal | Simpson\n"
          << endl;
     cout << "first func:\n"

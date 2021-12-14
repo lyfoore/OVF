@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def f(x,y):
-    return -y
+    return np.sin(y)
 
 def y_analitic(x):
     return np.exp(-x)
@@ -58,8 +58,8 @@ def drawer(x0,y0,xend,n):
     plt.title("n = "+str(n))
     plt.show()
 
-drawer(0, 1, 3, 100)
-    
+drawer(0, 1, 3, 50)
+
 def max_error(x0,y0,xend,n,func):
     x,y = func(x0,y0,xend,n)
     y_an = y_analitic(x)
@@ -79,11 +79,11 @@ errors_Euler_log = np.log(errors_Euler)
 errors_Runge2_log = np.log(errors_Runge2)
 errors_Runge4_log = np.log(errors_Runge4)
     
-print("Euler n^: " + str((errors_Euler_log[-1]-errors_Euler_log[0])/(n_log[-1]-n_log[0])))
-print("Runge2 n^: " + str((errors_Runge2_log[-1]-errors_Runge2_log[0])/(n_log[-1]-n_log[0])))
-print("Runge4 n^: " + str((errors_Runge4_log[-1]-errors_Runge4_log[0])/(n_log[-1]-n_log[0])))
+print("Euler n^: " + str((errors_Euler_log[-1]-errors_Euler_log[0])/(n_log[-1]-n_log[0])*(-1)))
+print("Runge2 n^: " + str((errors_Runge2_log[-1]-errors_Runge2_log[0])/(n_log[-1]-n_log[0])*(-1)))
+print("Runge4 n^: " + str((errors_Runge4_log[-1]-errors_Runge4_log[0])/(n_log[-1]-n_log[0])*(-1)))
 
-plt.plot(n_log, errors_Euler_log)
-plt.plot(n_log, errors_Runge2_log)
-plt.plot(n_log, errors_Runge4_log) 
+# plt.plot(n_log, errors_Euler_log)
+# plt.plot(n_log, errors_Runge2_log)
+# plt.plot(n_log, errors_Runge4_log) 
 plt.show()

@@ -46,12 +46,11 @@ def reverse_Euler(t0,x0,y0,tend,n):
 #для прямого h < 0.002
 x0 = 1
 y0 = 1
-n = 4000
-t,x,y = forward_Euler(0,x0,y0,6,n)
+t,x,y = forward_Euler(0,x0,y0,0.1,1000)
 x_sol, y_sol = solution(t,x0,y0)
-t_rev,x_rev,y_rev = reverse_Euler(0,x0,y0,6,n)
-plt.plot(t, -y, label = 'Forward Euler')
-plt.plot(t, -y_rev, label = 'Reverse Euler')
-plt.plot(t, -y_sol, label = 'Analitic solution')
+t_rev,x_rev,y_rev = reverse_Euler(0,x0,y0,0.1,1000)
+plt.plot(t, x_sol, label = 'Forward Euler')
+plt.plot(t, x_rev, label = 'Reverse Euler')
+# plt.plot(t, x_sol, label = 'Analitic solution')
 plt.legend()
 plt.show()
