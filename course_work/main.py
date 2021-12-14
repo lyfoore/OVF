@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
 T_max = 1
+R_min = 0.5
 R_max = 1
 D = 1e1
 T_N = 10
@@ -19,7 +20,8 @@ beta = D * dT / dR
 gamma = D * dT / dF / dF
 
 T = np.linspace(0, T_max, T_N)
-R = np.linspace(0, R_max, R_N)
+R = np.linspace(R_min, R_max, R_N)
+R_full = np.linspace(0, R_max, R_N)
 F = np.linspace(0, 2 * np.pi, F_N)
 
 U = np.full((R_N, F_N), 0.)
@@ -51,8 +53,8 @@ def gaussSeidel_tStep():
 
 def init():
     for indx, val in enumerate(U[int(R_N/2)]):
-        U[int(R_N/2)][indx] = 1.
-        U[int(R_N/2)+1][indx] = 1.
+        U[int(R_N/2)][indx] = 10.
+        U[int(R_N/2)+1][indx] = 10.
 
 
 def draw():
@@ -63,6 +65,9 @@ def draw():
     bx = fig.add_subplot(121, polar=True)
     ax.set_yticklabels([])
     bx.set_yticklabels([])
+    # ax.set_rscale('log')
+    # ax.set(rmax=1.0, rmin=0.0)
+    plt.setp([ax, bx], rorigin=0, rmin=5, rmax=10)
 
     ctf = ax.contourf(F, R, U, 50, cmap=cm.hot, vmin=Tmin, vmax=Tmax)
     ctf_old = bx.contourf(F, R, U_init, 50, cmap=cm.hot, vmin=Tmin, vmax=Tmax)
