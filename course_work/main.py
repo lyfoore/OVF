@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
-T_max = 1* 1e2
+T_max = 1* 1e4
 R_min = 0.4
 R_max = 1
 D = 1e-3
@@ -26,19 +26,20 @@ F = np.linspace(0, 2 * np.pi, F_N)
 U = np.full((R_N, F_N), 0.)
 
 error = 1e-6
-out = 1e4   # + for out
-inner = -1e4  # - for in
+out = -1e4
+inner = -1e4
+fix = 1e1
 def gaussSeidel_tStep():
     Uold = U.copy()
     converge = False
     while not converge:
         U0 = U.copy()
 
-        # outer neumann cond: (U[R_N-1 + 1][f] = U[R_N - 2][f] - 2*dR*out) where 'out' is magnitude of derivative
+        # outer neumann cond: (U[R_N-1 + 1][f] = U[R_N - 2][f] + 2*dR*out) where 'out' is magnitude of derivative
         # U[R_N-1][0] = (alpha*(U[R_N - 2][0] - 2*dR*out + Uold[R_N-2][0]) + beta/R[R_N-1]*(U[R_N - 2][0] - 2*dR*out) + gamma/R[R_N-1]/R[R_N-1]*(U[R_N-1][1] + Uold[R_N-1][F_N-1]) + Uold[R_N-1][0])/(1+2*alpha+beta/R[R_N-1]+2*gamma/R[R_N-1]/R[R_N-1])
         for f in range(0, F_N):
             if f == 0:
-                U[R_N-1][f] = (alpha*(U[R_N - 2][f] - 2*dR*out + U[R_N-2][f]) + beta/R[R_N-1]*(U[R_N - 2][f] - 2*dR*out - U[R_N-2][f]) + gamma /R[R_N-1]/R[R_N-1]*(U[R_N-1][f+1] + U[R_N-1][f-1]) + Uold[R_N-1][f])/(1+2*alpha+2/R[R_N-1]/R[R_N-1]*gamma)
+                U[R_N-1][f] = (alpha*(U[R_N - 2][f] + 2*dR*out + U[R_N-2][f]) + beta/R[R_N-1]*(U[R_N - 2][f] + 2*dR*out - U[R_N-2][f]) + gamma /R[R_N-1]/R[R_N-1]*(U[R_N-1][f+1] + U[R_N-1][f-1]) + Uold[R_N-1][f])/(1+2*alpha+2/R[R_N-1]/R[R_N-1]*gamma)
             U[R_N-1][f] = U[R_N-1][0]
         # U[R_N-1][F_N - 1] = (alpha*(U[R_N - 2][F_N - 1] - 2*dR*out + Uold[R_N-2][F_N - 1]) + beta/R[R_N-1]*(U[R_N - 2][F_N - 1] - 2*dR*out) + gamma/R[R_N-1]/R[R_N-1]*(U[R_N-1][0] + Uold[R_N-1][F_N-2]) + Uold[R_N-1][F_N - 1])/(1+2*alpha+beta/R[R_N-1]+2*gamma/R[R_N-1]/R[R_N-1])
 
@@ -46,7 +47,7 @@ def gaussSeidel_tStep():
         # U[0][f] = (alpha*(U[1][f] + Uold[1][f] - 2*dR*inner) + beta/R[0]*U[1][f] + gamma/R[0]/R[0]*(U[0][f+1] + Uold[0][f-1]) + Uold[0][f])/(1+2*alpha+beta/R[0]+2*gamma/R[0]/R[0])
         for f in range(0, F_N):
             if f == 0:
-                U[0][f] = (alpha*(U0[1][f] + U0[1][f] - 2*dR*inner) + beta/R[0]*(U0[1][f] - U0[1][f] - 2*dR*inner) + gamma /R[0]/R[0]*(U[0][f+1] + U[0][f-1]) + Uold[0][f])/(1+2*alpha+2/R[0]/R[0]*gamma)
+                U[0][f] = fix #(alpha*(U0[1][f] + U0[1][f] - 2*dR*inner) + beta/R[0]*(U0[1][f] - U0[1][f] - 2*dR*inner) + gamma /R[0]/R[0]*(U[0][f+1] + U[0][f-1]) + Uold[0][f])/(1+2*alpha+2/R[0]/R[0]*gamma)
             U[0][f] = U[0][0]
         # U[0][F_N - 1] = (alpha*(U[R_N - 2][F_N - 1] - 2*dR*out + Uold[R_N-2][F_N - 1]) + beta/R[R_N-1]*(U[R_N - 2][F_N - 1] - 2*dR*out) + gamma/R[R_N-1]/R[R_N-1]*(U[R_N-1][0] + Uold[R_N-1][F_N-2]) + Uold[R_N-1][F_N - 1])/(1+2*alpha+beta/R[R_N-1]+2*gamma/R[R_N-1]/R[R_N-1])
 
@@ -90,6 +91,19 @@ def draw():
     fig.colorbar(ctf, cax=cbar_ax)
     plt.show()
 
+def draw_graph():
+    U_r = []
+    for array in U:
+        U_r.append(array[int(F_N/2)])
+    C1 = R_max * out
+    C2 = fix - R_max*out*m.log(R_min)
+    U_analyt = C1 * np.log(R) + C2
+    plt.plot(R, U_r, label='calc')
+    plt.plot(R, U_analyt, label='analyt')
+    plt.legend()
+    # plt.yscale('log')
+    plt.show()
+
 def main():
     # draw()
     for t in range(0, T_N):
@@ -104,3 +118,4 @@ def main():
 # init()
 U_init = U.copy()
 main()
+draw_graph()
