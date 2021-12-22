@@ -3,13 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
-T_max = 1* 1e4
-R_min = 0.4
-R_max = 1
+T_max = 1 * 1e7
+R_min = 4
+R_max = 10
 D = 1e-3
 T_N = 250
-R_N = 21
-F_N = 10
+R_N = 31
+F_N = 50
 
 dT = T_max / T_N
 dR = R_max / R_N
@@ -23,12 +23,12 @@ T = np.linspace(0, T_max, T_N)
 R = np.linspace(R_min, R_max, R_N)
 F = np.linspace(0, 2 * np.pi, F_N)
 
-U = np.full((R_N, F_N), 0.)
+U = np.full((R_N, F_N), 10.)
 
 error = 1e-6
-out = -1e4
-inner = -1e4
-fix = 1e1
+out = 1e1
+inner = 1e2
+fix = 1e2
 def gaussSeidel_tStep():
     Uold = U.copy()
     converge = False
@@ -39,7 +39,7 @@ def gaussSeidel_tStep():
         # U[R_N-1][0] = (alpha*(U[R_N - 2][0] - 2*dR*out + Uold[R_N-2][0]) + beta/R[R_N-1]*(U[R_N - 2][0] - 2*dR*out) + gamma/R[R_N-1]/R[R_N-1]*(U[R_N-1][1] + Uold[R_N-1][F_N-1]) + Uold[R_N-1][0])/(1+2*alpha+beta/R[R_N-1]+2*gamma/R[R_N-1]/R[R_N-1])
         for f in range(0, F_N):
             if f == 0:
-                U[R_N-1][f] = (alpha*(U[R_N - 2][f] + 2*dR*out + U[R_N-2][f]) + beta/R[R_N-1]*(U[R_N - 2][f] + 2*dR*out - U[R_N-2][f]) + gamma /R[R_N-1]/R[R_N-1]*(U[R_N-1][f+1] + U[R_N-1][f-1]) + Uold[R_N-1][f])/(1+2*alpha+2/R[R_N-1]/R[R_N-1]*gamma)
+                U[R_N-1][f] = fix #(alpha*(U[R_N - 2][f] + 2*dR*out + U[R_N-2][f]) + beta/R[R_N-1]*(U[R_N - 2][f] + 2*dR*out - U[R_N-2][f]) + Uold[R_N-1][f])/(1+2*alpha)
             U[R_N-1][f] = U[R_N-1][0]
         # U[R_N-1][F_N - 1] = (alpha*(U[R_N - 2][F_N - 1] - 2*dR*out + Uold[R_N-2][F_N - 1]) + beta/R[R_N-1]*(U[R_N - 2][F_N - 1] - 2*dR*out) + gamma/R[R_N-1]/R[R_N-1]*(U[R_N-1][0] + Uold[R_N-1][F_N-2]) + Uold[R_N-1][F_N - 1])/(1+2*alpha+beta/R[R_N-1]+2*gamma/R[R_N-1]/R[R_N-1])
 
@@ -47,7 +47,7 @@ def gaussSeidel_tStep():
         # U[0][f] = (alpha*(U[1][f] + Uold[1][f] - 2*dR*inner) + beta/R[0]*U[1][f] + gamma/R[0]/R[0]*(U[0][f+1] + Uold[0][f-1]) + Uold[0][f])/(1+2*alpha+beta/R[0]+2*gamma/R[0]/R[0])
         for f in range(0, F_N):
             if f == 0:
-                U[0][f] = fix #(alpha*(U0[1][f] + U0[1][f] - 2*dR*inner) + beta/R[0]*(U0[1][f] - U0[1][f] - 2*dR*inner) + gamma /R[0]/R[0]*(U[0][f+1] + U[0][f-1]) + Uold[0][f])/(1+2*alpha+2/R[0]/R[0]*gamma)
+                U[0][f] = (2 * alpha * (U[1][f] + dR * inner) - 2*beta/R[0]*dR*inner + Uold[0][f])/(1 + 2 * alpha)
             U[0][f] = U[0][0]
         # U[0][F_N - 1] = (alpha*(U[R_N - 2][F_N - 1] - 2*dR*out + Uold[R_N-2][F_N - 1]) + beta/R[R_N-1]*(U[R_N - 2][F_N - 1] - 2*dR*out) + gamma/R[R_N-1]/R[R_N-1]*(U[R_N-1][0] + Uold[R_N-1][F_N-2]) + Uold[R_N-1][F_N - 1])/(1+2*alpha+beta/R[R_N-1]+2*gamma/R[R_N-1]/R[R_N-1])
 
@@ -57,7 +57,7 @@ def gaussSeidel_tStep():
             # U[r][0] = (alpha*(U[r+1][0] + Uold[r-1][0]) + beta/R[r]*U[r+1][0] + gamma/R[r]/R[r]*(U[r][1] + Uold[r][F_N - 1]) + Uold[r][0])/(1+2*alpha+beta/R[r]+2*gamma/R[r]/R[r])
             for f in range(0, F_N):
                 if f == 0:
-                    U[r][f] = (alpha*(U0[r+1][f] + U[r-1][f]) + beta/R[r]*(U0[r+1][f] - U[r-1][f]) + gamma /R[r]/R[r]*(U0[r][f+1] + U[r][f-1]) + Uold[r][f])/(1+2*alpha+2/R[r]/R[r]*gamma)
+                    U[r][f] = (alpha * (U0[r+1][f] + U[r-1][f]) + beta/R[r]*(U0[r+1][f] - U[r-1][f]) + Uold[r][f])/(1 + 2 * alpha)
                 U[r][f] = U[r][0]
             # U[r][F_N - 1] = (alpha*(U[r+1][F_N - 1] + Uold[r-1][F_N - 1]) + beta/R[r]*U[r+1][F_N - 1] + gamma/R[r]/R[r]*(U[r][0] + Uold[r][F_N - 2]) + Uold[r][F_N - 1])/(1+2*alpha+beta/R[r]+2*gamma/R[r]/R[r])
 
@@ -95,9 +95,16 @@ def draw_graph():
     U_r = []
     for array in U:
         U_r.append(array[int(F_N/2)])
-    C1 = R_max * out
-    C2 = fix - R_max*out*m.log(R_min)
-    U_analyt = C1 * np.log(R) + C2
+    C1 = R_max * out 
+    C2 = fix - R_max*out*np.log(R_min)
+    # U_analyt = C1 * np.log(R) + C2
+
+    # C1 = R_max * out 
+    # C2 = fix - R_max*out*np.log(R_min)
+    U_analyt = R_min * inner * np.log(R_max/R) + fix
+
+
+    print(U_analyt)
     plt.plot(R, U_r, label='calc')
     plt.plot(R, U_analyt, label='analyt')
     plt.legend()
@@ -118,4 +125,5 @@ def main():
 # init()
 U_init = U.copy()
 main()
+# print(U_analyt)
 draw_graph()
