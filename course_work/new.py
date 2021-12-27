@@ -65,6 +65,15 @@ def draw_graph():
     plt.plot(T, U_time)
     plt.show()
 
+def stat_time():
+    eps = 1e-3
+    stat_time = "unstationary"
+    for i in range(1, T_N):
+        if (abs(U_time[i] - U_time[i-1]) < eps):
+            stat_time = T[i]
+            break
+    print("stationary time = ")
+    print(stat_time)
 
 def main():
     # draw()
@@ -72,6 +81,7 @@ def main():
         gaussSeidel_tStep()
         print('STEP')
         U_time.append(U[int(R_N/2) - 1])
+    stat_time()
     draw_graph()
 
 main()
